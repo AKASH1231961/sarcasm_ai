@@ -2,23 +2,22 @@ import pandas as pd
 import json
 import re
 
-# 1. Load Kaggle CSV (please place friends_script.csv in the same directory)
+# 1. Load Kaggle CSV 
 df = pd.read_csv("friends_script.csv")
 
-# 2. Basic cleaning: ensure no missing values in character names and lines
 df = df.dropna(subset=['Name', 'Lines'])
 df = df.reset_index(drop=True)          # 🔑 KEY FIX: make index contiguous
 
 df['Character'] = df['Name'].astype(str).str.strip()
 df['Lines'] = df['Lines'].astype(str).str.strip()
 
-# 3. Find all indices of Chandler's lines
+# Finding all indices of Chandler's lines
 chandler_indices = df[df['Name'].str.contains('Chandler', case=False, na=False)].index.tolist()
 
-# 4. Construct conversation pairs: previous line as user, Chandler's line as assistant
+#  Construct conversation pairs: previous line as user, Chandler's line as assistant
 data = []
 for idx in chandler_indices:
-    if idx == 0:  # Skip the first line (no context)
+    if idx == 0:  
         continue
     
     prev_idx = idx - 1
